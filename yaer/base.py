@@ -57,11 +57,14 @@ def experiment_component(f):
     global _current_context
 
     def inner(*args, **kwargs):
-        _current_context.dumper.append_to_results('{}_info'.format(f.__name__),
-                                                  {'docstring': f.__doc__,
-                                                   'module': f.__module__})
-        new_params = get_updated_params(f, _current_context, args, kwargs)
-        return f(**new_params)
+        if _current_context is not None:
+            _current_context.dumper.append_to_results('{}_info'.format(f.__name__),
+                                                      {'docstring': f.__doc__,
+                                                       'module': f.__module__})
+            new_params = get_updated_params(f, _current_context, args, kwargs)
+            return f(**new_params)
+        else:
+            return f(*args, **kwargs)
     return inner
 
 
