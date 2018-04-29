@@ -58,9 +58,9 @@ def experiment_component(f):
 
     def inner(*args, **kwargs):
         if _current_context is not None:
-            _current_context.dumper.append_to_results('{}_info'.format(f.__name__),
-                                                      {'docstring': f.__doc__,
-                                                       'module': f.__module__})
+            _current_context['dumper'].append_to_results('{}_info'.format(f.__name__),
+                                                         {'docstring': f.__doc__,
+                                                          'module': f.__module__})
             new_params = get_updated_params(f, _current_context, args, kwargs)
             return f(**new_params)
         else:
@@ -71,7 +71,7 @@ def experiment_component(f):
 def get_updated_params(f, configs, args, kwargs):
     args_names = inspect.getargs(f.__code__).args
     current_args = dict(zip(args_names, args))
-    current_args.update(kwargs)
+    current_args.update({k: v for k, v in kwargs.items() if k in args_names})
     full_replacement = {k: v for k, v in configs.items() if k in args_names}
     full_replacement.update(current_args)
     return full_replacement
