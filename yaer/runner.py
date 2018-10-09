@@ -75,10 +75,10 @@ def run_experiments(experiments_to_run, dump, dump_path, clean_previous_results)
             if dump_path is None:
                 dump_path = BASE_PATH
             no_time_path = os.path.join(dump_path, 'results', name)
-            dump_path = os.path.join(no_time_path, current_time)
+            final_dump_path = os.path.join(no_time_path, current_time)
             if clean_previous_results and os.path.exists(no_time_path):
                 logger.debug('Removing %s', no_time_path)
                 shutil.rmtree(no_time_path)
-            dumpers.append(FileDumper(dump_path))
+            dumpers.append(FileDumper(final_dump_path))
         run_experiment(name, exp, dumpers)
         logger.info('='*100)
