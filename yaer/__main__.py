@@ -27,10 +27,14 @@ def show_available_experiments_cli():
 
 @click.command(name='run')
 @click.option('-e', '--experiment',
-              required=True,
+              required=False,
               multiple=True,
               help=('Experiment to run. This can be specified multiple times. '
                     'See list command por options.'))
+@click.option('-re', '--regular-expression',
+              required=False,
+              multiple=True,
+              help='Run experiments that matches a regular expression')
 @click.option('-d', '--dump',
               required=False,
               is_flag=True,
@@ -43,9 +47,9 @@ def show_available_experiments_cli():
               type=click.Path(),
               required=False,
               help='Base path to dump results and files.')
-def run_experiments_cli(experiment, dump, dump_path, clean_previous_results):
+def run_experiments_cli(experiment, regular_expression, dump, dump_path, clean_previous_results):
     """Run listed experiments with provided datasets."""
-    run_experiments(experiment, dump, dump_path, clean_previous_results)
+    run_experiments(experiment, regular_expression, dump, dump_path, clean_previous_results)
 
 
 cli.add_command(show_available_experiments_cli)

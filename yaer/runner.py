@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import shutil
 from datetime import datetime
 
@@ -48,7 +49,7 @@ def get_available_experiments(experiment_pkg_path=None):
     return runner_base.get_registered_experiments(exp_path)
 
 
-def get_validated_experiments(included_experiments):
+def get_validated_experiments(included_experiments, regex_to_match=None):
     validated = {}
     all_experiments = get_available_experiments()
     for e in included_experiments:
@@ -57,13 +58,37 @@ def get_validated_experiments(included_experiments):
                 e, ', '.join(all_experiments.keys())
             ))
         validated[e] = all_experiments[e]
+
+    if regex_to_match:
+        matched_experiments = []
+        for regex in regex_to_match:
+            logger.info('Looking for experiments using regular expression "%s"', regex)
+            r = re.compile(regex, re.IGNORECASE)
+            matched_experiments = list(filter(r.match, all_experiments.keys()))
+
+            if not matched_experiments:
+                logger.info('No experiment matched using regular expression "%s"', regex)
+            else:
+                logger.info('Experiments matched: %s', ', '.join(matched_experiments))
+                for e in matched_experiments:
+                    validated[e] = all_experiments[e]
+
+    if not validated:
+        raise ValueError(
+            ('No experiment(s) to run provided. '
+             'Available experiments: {}').format(
+                ', '.join(all_experiments.keys())
+            ))
+
     return validated
 
 
-def run_experiments(experiments_to_run, dump, dump_path, clean_previous_results):
+def run_experiments(experiments_to_run, regex_to_match,
+                    dump, dump_path, clean_previous_results):
     """Runs experiments based on command line parameters
     """
-    validated_experiments = get_validated_experiments(experiments_to_run)
+    validated_experiments = get_validated_experiments(experiments_to_run, regex_to_match)
+
     n_experiments = len(validated_experiments)
 
     current_time = datetime.strftime(datetime.utcnow(), '%Y%m%d_%H%M%S')
