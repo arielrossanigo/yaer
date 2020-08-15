@@ -57,6 +57,13 @@ class DumperCollection(BaseDumper):
         for dumper in self.dumpers:
             dumper.dump_csv(filename, obj)
 
+    def get_base_path(self):
+        '''returns base path of FileDumper if exists, otherwise None'''
+        for dumper in self.dumpers:
+            if isinstance(dumper, FileDumper):
+                return dumper.path
+        return None
+
 
 class LogDumper(BaseDumper):
     def __init__(self, loggername):
