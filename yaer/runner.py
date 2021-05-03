@@ -98,7 +98,7 @@ def run_experiments(experiments_to_run, regex_to_match,
         dumpers = DumperCollection(LogDumper(name))
         if dump:
             if dump_path is None:
-                dump_path = BASE_PATH
+                dump_path = os.getenv('YAER_DUMP_PATH', BASE_PATH)
             no_time_path = os.path.join(dump_path, 'results', name)
             final_dump_path = os.path.join(no_time_path, current_time)
             if clean_previous_results and os.path.exists(no_time_path):
