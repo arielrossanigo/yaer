@@ -8,7 +8,8 @@ from yaer import base as runner_base
 from yaer.dumpers import DumperCollection, FileDumper, LogDumper
 
 logger = logging.getLogger('yaer')
-BASE_PATH = os.path.realpath(os.curdir)
+
+BASE_PATH = os.getenv('YAER_BASE_PATH', os.path.realpath(os.curdir))
 
 
 def get_experiment_info(experiment, **kwargs):
