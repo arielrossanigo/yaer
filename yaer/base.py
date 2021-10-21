@@ -1,9 +1,9 @@
 import inspect
-from importlib.util import module_from_spec, spec_from_file_location
 import os
+from functools import wraps
+from importlib.util import module_from_spec, spec_from_file_location
 
 from yaer.dumpers import LogDumper
-
 
 _loaded = False
 _registered_experiments = {}
@@ -37,6 +37,7 @@ def experiment(configs=None):
         configs = {}
 
     def inner(f):
+        @wraps(f)
         def the_experiment(*args, **kwargs):
             global _current_context
             configs['dumper'] = kwargs.get('dumper', LogDumper(f.__name__))
@@ -56,6 +57,7 @@ def experiment(configs=None):
 def experiment_component(f):
     global _current_context
 
+    @wraps(f)
     def inner(*args, **kwargs):
         if _current_context is not None:
             _current_context['dumper'].append_to_results('{}_info'.format(f.__name__),
