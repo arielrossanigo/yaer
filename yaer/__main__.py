@@ -52,7 +52,7 @@ def run_experiments_cli(experiment, regular_expression, dump, dump_path, clean_p
     run_experiments(experiment, regular_expression, dump, dump_path, clean_previous_results)
 
 
-@click.command(name='runall')
+@click.command(name='run-all')
 @click.option('-d', '--dump',
               required=False,
               is_flag=True,
