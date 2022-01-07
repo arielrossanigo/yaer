@@ -19,6 +19,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'click>=0.6.0',
+        'pandas>=0.22.0'
     ],
     dependency_links=[
     ],
