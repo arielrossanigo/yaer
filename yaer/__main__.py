@@ -52,8 +52,32 @@ def run_experiments_cli(experiment, regular_expression, dump, dump_path, clean_p
     run_experiments(experiment, regular_expression, dump, dump_path, clean_previous_results)
 
 
+@click.command(name='runall')
+@click.option('-d', '--dump',
+              required=False,
+              is_flag=True,
+              help='Dump results and files.')
+@click.option('--clean-previous-results',
+              required=False,
+              is_flag=True,
+              help='Remove previous results for every runned experiment.')
+@click.option('--dump_path',
+              type=click.Path(),
+              required=False,
+              help='Base path to dump results and files.')
+def run_all_experiments_cli(dump, dump_path, clean_previous_results):
+    """Run all experiments available."""
+    all_experiments = get_available_experiments()
+
+    if len(all_experiments) > 0:
+        run_experiments(all_experiments, None, dump, dump_path, clean_previous_results)
+    else:
+        print('No available experiments were found !')
+
+
 cli.add_command(show_available_experiments_cli)
 cli.add_command(run_experiments_cli)
+cli.add_command(run_all_experiments_cli)
 
 if __name__ == '__main__':
     cli()
