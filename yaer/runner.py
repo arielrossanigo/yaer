@@ -106,5 +106,10 @@ def run_experiments(experiments_to_run, regex_to_match,
                 logger.debug('Removing %s', no_time_path)
                 shutil.rmtree(no_time_path)
             dumpers.append(FileDumper(final_dump_path))
-        run_experiment(name, exp, dumpers)
+
+        try:
+            run_experiment(name, exp, dumpers)
+        except Exception:
+            logger.exception("Experiment internal error !")
+
         logger.info('='*100)
